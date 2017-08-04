@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>particles.frag</file>
+        <file>particles.vert</file>
+        <file>particles.comp</file>
+    </qresource>
+</RCC>
