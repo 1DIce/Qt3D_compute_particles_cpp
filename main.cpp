@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     QMaterial *computeMaterial = new QMaterial();
 
     //@TO-DO init this buffer
-    Qt3DRender::QBuffer *particleBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::ShaderStorageBuffer);
+    Qt3DRender::QBuffer *particleBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer);
     QByteArray particleByteArray = buildParticleBuffer();
     particleBuffer->setData(particleByteArray);
 
@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
     //clear buffer child of surface selector
     Qt3DRender::QClearBuffers *clearBuffer = new Qt3DRender::QClearBuffers(surfaceSelector);
     clearBuffer->setBuffers(Qt3DRender::QClearBuffers::ColorDepthBuffer);
-    clearBuffer->setClearColor(Qt::red);
+    clearBuffer->setClearColor(Qt::black);
     
     //no draw child of clear buffer
     //this prevents the renderer from rendering any primitive.
@@ -195,7 +195,8 @@ int main(int argc, char* argv[])
     particlePositionDataAttribute->setVertexBaseType(QAttribute::Float);
     particlePositionDataAttribute->setVertexSize(3);
     particlePositionDataAttribute->setDivisor(1);
-    particlePositionDataAttribute->setByteStride(12 * sizeof(float));
+    particlePositionDataAttribute->setByteOffset(0);
+    particlePositionDataAttribute->setByteStride(12 * (int)sizeof(float));
     particlePositionDataAttribute->setBuffer(particleBuffer);
 
     QAttribute *particleColorDataAttribute = new QAttribute();
@@ -204,8 +205,8 @@ int main(int argc, char* argv[])
     particleColorDataAttribute->setVertexBaseType(QAttribute::Float);
     particleColorDataAttribute->setVertexSize(3);
     particleColorDataAttribute->setDivisor(1);
-    particleColorDataAttribute->setByteOffset(8 * sizeof(float));
-    particleColorDataAttribute->setByteStride(12 * sizeof(float));
+    particleColorDataAttribute->setByteOffset(8 * (int)sizeof(float));
+    particleColorDataAttribute->setByteStride(12 * (int)sizeof(float));
     particleColorDataAttribute->setBuffer(particleBuffer);
 
     //Geometry
@@ -259,8 +260,8 @@ QByteArray buildParticleBuffer()
 
         for(int j = 0; j < 3; j++)
         {
-            rawVertexArray[positionIdx + j] = (std::rand() - 0.5f) * factor;
-            rawVertexArray[velocityIdx + j] = std::rand() * 2.0f;
+            rawVertexArray[positionIdx + j] = ((static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) - 0.5f) * factor;
+            rawVertexArray[velocityIdx + j] = (static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX)) * 2.0f;
             rawVertexArray[colorIdx + j] = 0.75f + std::sin(((i / 1024.0f) + j * 0.333f) * 6.0f) * 0.25f;
         }
         rawVertexArray[positionIdx + 3] = 1.0f;
