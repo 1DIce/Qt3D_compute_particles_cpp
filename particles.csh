@@ -16,14 +16,14 @@ struct ParticleData
 layout (std430, binding = 0) coherent buffer Particles
 {
     ParticleData particles[];
-} data;
+};
 
 void main(void)
 {
     uint globalId = gl_GlobalInvocationID.x;
 
     // Retrieve current particle from previous frame
-    ParticleData currentParticle = data.particles[globalId];
+    ParticleData currentParticle = particles[globalId];
 
     // New position = old position + distance traveled over step duration
     currentParticle.position = currentParticle.position + currentParticle.direction * particleStep;
@@ -35,7 +35,6 @@ void main(void)
     currentParticle.direction = currentParticle.direction + acceleration * particleStep;
 
 
-
     // Save updated particle
-    data.particles[globalId] = currentParticle;
+    particles[globalId] = currentParticle;
 }

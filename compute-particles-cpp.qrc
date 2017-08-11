@@ -2,6 +2,6 @@
     <qresource prefix="/">
         <file>particles.frag</file>
         <file>particles.vert</file>
-        <file>particles.comp</file>
+        <file>particles.csh</file>
     </qresource>
 </RCC>

@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
     //Shaders
     QShaderProgram *computeShader = new QShaderProgram();
-    computeShader->setComputeShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/particles.comp"))));
+    computeShader->setComputeShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/particles.csh"))));
 
     QShaderProgram *drawShader = new QShaderProgram();
     drawShader->setVertexShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/particles.vert"))));
