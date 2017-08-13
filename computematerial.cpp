@@ -80,7 +80,8 @@ ComputeMaterial::ComputeMaterial(Qt3DCore::QNode *parent)
 void ComputeMaterial::setVertexBuffer(QPointer<QBuffer> inBuffer)
 {
     m_pParticlesParameter->setName(QStringLiteral("Particles"));
-    //
+    
+    //Set the buffer as parameter data
     QVariant tempVariant;
     tempVariant.setValue(particleBuffer);
     m_pParticlesParameter->setValue(tempVariant);
@@ -134,6 +135,7 @@ void ComputeMaterial::init()
     m_pDrawTechnique->addRenderPass(m_pDrawRenderPass);
 
     //Effect
+    //Link shader and uniforms
     m_pEffect->addTechnique(m_pComputeTechnique);
     m_pEffect->addTechnique(m_pDrawTechnique);
 

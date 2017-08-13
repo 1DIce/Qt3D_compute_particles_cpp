@@ -1,6 +1,5 @@
 
 
-
 #include <QGuiApplication>
 
 #include <Qt3DExtras/Qt3DWindow>
