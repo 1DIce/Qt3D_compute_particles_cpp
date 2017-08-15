@@ -25,6 +25,8 @@
 
 #include <QSharedPointer>
 #include <Qt3DCore>
+#include <Qt3DRender>
+#include <QTimer>
 
 
 
@@ -40,16 +42,17 @@
 // FORWARD DECLARATIONS
 //=============================================================================================================
 
-namespace Qt3DRender {
-    class QMaterial;
-    class QEffect;
-    class QParameter;
-    class QShaderProgram;
-    class QFilterKey;
-    class QTechnique;
-    class QRenderPass;
-    class QBuffer;
-}
+//namespace Qt3DRender {
+//    class QMaterial;
+//    class QEffect;
+//    class QParameter;
+//    class QShaderProgram;
+//    class QFilterKey;
+//    class QTechnique;
+//    class QRenderPass;
+//    class QBuffer;
+//}
+
 
 //*************************************************************************************************************
 //=============================================================================================================
@@ -90,7 +93,9 @@ public:
      *
      * @param inBuffer
      */
-    void setVertexBuffer(QPointer<Qt3DRender::QBuffer> inBuffer);
+    void setVertexBuffer(Qt3DRender::QBuffer *inBuffer);
+
+    void updateSinUniform();
 
 protected:
 
@@ -99,6 +104,7 @@ private:
     /**
      * Init the ComputeMaterial class
      */
+
     void init();
 
     float m_fParticleStep;
@@ -115,6 +121,11 @@ private:
     QPointer<Qt3DRender::QParameter> m_pParticlesParameter;
     QPointer<Qt3DRender::QFilterKey> m_pComputeFilterKey;
     QPointer<Qt3DRender::QTechnique> m_pComputeTechnique;
+
+    //test
+    QPointer<Qt3DRender::QParameter> m_pSinParameter;
+    QPointer<QTimer> m_pTimer;
+    //
 
     //Draw Part
     QPointer<Qt3DRender::QShaderProgram> m_pDrawShader;

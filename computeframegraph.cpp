@@ -132,13 +132,16 @@ void ComputeFramegraph::init()
     m_pDispatchCompute->setWorkGroupY(1);
     m_pDispatchCompute->setWorkGroupZ(1);
 
-    //@TO-DO Filterkeys as input from ComputeMaterial
     //Set FilterKeys
     m_pComputeKey->setName(QStringLiteral("type"));
     m_pComputeKey->setValue(QStringLiteral("compute"));
 
     m_pDrawKey->setName(QStringLiteral("type"));
     m_pDrawKey->setValue(QStringLiteral("draw"));
+
+    //Add Matches
+    m_pComputeFilter->addMatch(m_pComputeKey);
+    m_pDrawFilter->addMatch(m_pDrawKey);
 
 
     //Set Memory Barrier

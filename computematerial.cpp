@@ -70,6 +70,8 @@ ComputeMaterial::ComputeMaterial(Qt3DCore::QNode *parent)
 , m_pDrawRenderPass(new QRenderPass)
 , m_pDrawFilterKey(new QFilterKey)
 , m_pDrawTechnique(new QTechnique)
+, m_pSinParameter(new QParameter)
+, m_pTimer(new QTimer(this))
 {
     this->init();
 }
@@ -77,15 +79,27 @@ ComputeMaterial::ComputeMaterial(Qt3DCore::QNode *parent)
 
 //*************************************************************************************************************
 
-void ComputeMaterial::setVertexBuffer(QPointer<QBuffer> inBuffer)
+void ComputeMaterial::setVertexBuffer(Qt3DRender::QBuffer *inBuffer)
 {
     m_pParticlesParameter->setName(QStringLiteral("Particles"));
     
     //Set the buffer as parameter data
     QVariant tempVariant;
-    tempVariant.setValue(particleBuffer);
+    tempVariant.setValue(inBuffer);
     m_pParticlesParameter->setValue(tempVariant);
     m_pComputeRenderPass->addParameter(m_pParticlesParameter);
+}
+
+
+void ComputeMaterial::updateSinUniform()
+{
+
+    const float pi = std::acos(-1);
+    static float t = 0.0f;
+    const float sinT = std::sin(t);
+    m_pSinParameter->setValue(sinT);
+    t += pi / 16.0f;
+
 }
 
 
@@ -93,6 +107,18 @@ void ComputeMaterial::setVertexBuffer(QPointer<QBuffer> inBuffer)
 
 void ComputeMaterial::init()
 {
+
+    //TEST
+    ///Synchro tests
+
+    m_pSinParameter->setName(QStringLiteral("sinUniform"));
+    m_pSinParameter->setValue(0.0f);
+
+    connect(m_pTimer, &QTimer::timeout,this, &ComputeMaterial::updateSinUniform);
+    m_pTimer->start(1000);
+    //@TO-DO connect timer with updateUniform
+    ////////
+
     //Compute part
     //Set shader
     m_pComputeShader->setComputeShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/particles.csh"))));
@@ -133,6 +159,10 @@ void ComputeMaterial::init()
     //Add to technique
     m_pDrawTechnique->addFilterKey(m_pDrawFilterKey);
     m_pDrawTechnique->addRenderPass(m_pDrawRenderPass);
+
+    //TEST
+    m_pComputeRenderPass->addParameter(m_pSinParameter);
+    //
 
     //Effect
     //Link shader and uniforms

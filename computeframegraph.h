@@ -23,6 +23,9 @@
 //=============================================================================================================
 
 #include <QSharedPointer>
+#include <Qt3DCore/QNode>
+#include <Qt3DRender/QViewport>
+#include <Qt3DRender>
 
 
 //*************************************************************************************************************
@@ -48,6 +51,8 @@ namespace Qt3DRender {
     class QFilterKey;
     class QMemoryBarrier;
 }
+
+
 
 //*************************************************************************************************************
 //=============================================================================================================
@@ -108,10 +113,12 @@ private:
     QPointer<Qt3DRender::QFilterKey> m_pComputeKey;
     QPointer<Qt3DRender::QFilterKey> m_pDrawKey;
 
+    QPointer<Qt3DRender::QCameraSelector> m_pCameraSelector;
+
     QPointer<Qt3DRender::QTechniqueFilter> m_pComputeFilter;
     QPointer<Qt3DRender::QTechniqueFilter> m_pDrawFilter;
 
-    QPointer<Qt3DRender::QCameraSelector> m_pCameraSelector;
+
 
     QPointer<Qt3DRender::QMemoryBarrier> m_pMemoryBarrier;
 };
