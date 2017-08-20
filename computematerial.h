@@ -27,6 +27,7 @@
 #include <Qt3DCore>
 #include <Qt3DRender>
 #include <QTimer>
+#include <QByteArray>
 
 
 
@@ -107,6 +108,9 @@ private:
 
     void init();
 
+    QByteArray buildShaderStorage();
+    void updateShaderStorage();
+
     float m_fParticleStep;
     float m_fFinalCollisonFactor;
 
@@ -123,6 +127,8 @@ private:
     QPointer<Qt3DRender::QTechnique> m_pComputeTechnique;
 
     //test
+    QPointer<Qt3DRender::QBuffer> m_pShaderStorage;
+    QPointer<Qt3DRender::QParameter> m_pStorageParameter;
     QPointer<Qt3DRender::QParameter> m_pSinParameter;
     QPointer<QTimer> m_pTimer;
     //

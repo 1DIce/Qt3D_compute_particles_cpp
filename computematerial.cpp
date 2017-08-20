@@ -14,6 +14,7 @@
 //=============================================================================================================
 
 #include "computematerial.h"
+#include <iostream>
 
 
 //*************************************************************************************************************
@@ -48,6 +49,7 @@ using namespace Qt3DRender;
 // DEFINE GLOBAL METHODS
 //=============================================================================================================
 
+const int PARTICLE_COUNT = 1024 * 50;
 
 //*************************************************************************************************************
 //=============================================================================================================
@@ -72,6 +74,8 @@ ComputeMaterial::ComputeMaterial(Qt3DCore::QNode *parent)
 , m_pDrawTechnique(new QTechnique)
 , m_pSinParameter(new QParameter)
 , m_pTimer(new QTimer(this))
+, m_pStorageParameter(new QParameter)
+, m_pShaderStorage(new Qt3DRender::QBuffer(Qt3DRender::QBuffer::ShaderStorageBuffer))
 {
     this->init();
 }
@@ -98,7 +102,7 @@ void ComputeMaterial::updateSinUniform()
     static float t = 0.0f;
     const float sinT = std::sin(t);
     m_pSinParameter->setValue(sinT);
-    t += pi / 16.0f;
+    t += pi / 160.0f;
 
 }
 
@@ -111,12 +115,22 @@ void ComputeMaterial::init()
     //TEST
     ///Synchro tests
 
-    m_pSinParameter->setName(QStringLiteral("sinUniform"));
-    m_pSinParameter->setValue(0.0f);
+    //init shader storage buffer
+    m_pShaderStorage->setUsage(Qt3DRender::QBuffer::StreamRead);
+    m_pShaderStorage->setData(buildShaderStorage());
 
-    connect(m_pTimer, &QTimer::timeout,this, &ComputeMaterial::updateSinUniform);
-    m_pTimer->start(1000);
-    //@TO-DO connect timer with updateUniform
+    m_pStorageParameter->setName(QStringLiteral("ColorStorage"));
+
+    m_pStorageParameter->setValue(QVariant::fromValue(m_pShaderStorage.data()));
+
+    connect(m_pTimer, &QTimer::timeout,this, &ComputeMaterial::updateShaderStorage);
+    m_pTimer->start(10);
+
+//    m_pSinParameter->setName(QStringLiteral("sinUniform"));
+//    m_pSinParameter->setValue(0.0f);
+
+//    connect(m_pTimer, &QTimer::timeout,this, &ComputeMaterial::updateSinUniform);
+//    m_pTimer->start(50);
     ////////
 
     //Compute part
@@ -161,7 +175,8 @@ void ComputeMaterial::init()
     m_pDrawTechnique->addRenderPass(m_pDrawRenderPass);
 
     //TEST
-    m_pComputeRenderPass->addParameter(m_pSinParameter);
+    m_pComputeRenderPass->addParameter((m_pStorageParameter));
+    //m_pComputeRenderPass->addParameter(m_pSinParameter);
     //
 
     //Effect
@@ -174,6 +189,60 @@ void ComputeMaterial::init()
     this->addParameter(m_pCollisionParameter);
 
     this->setEffect(m_pEffect);
+}
+
+QByteArray ComputeMaterial::buildShaderStorage()
+{
+
+        const int dataSize = 4;
+
+        QByteArray bufferData;
+        bufferData.resize(PARTICLE_COUNT * dataSize * (int)sizeof(float));
+        float *rawVertexArray = reinterpret_cast<float *>(bufferData.data());
+
+        for(int i = 0 ; i < PARTICLE_COUNT; i++)
+        {
+            const int colorIdx = i * dataSize;
+
+            for(int j = 0; j < 3; j++)
+            {       
+                rawVertexArray[colorIdx + j] = 1.0;
+            }
+            rawVertexArray[colorIdx + 3] = 1.0f;
+        }
+        return bufferData;
+
+}
+
+void ComputeMaterial::updateShaderStorage()
+{
+    const int dataSize = 4;
+
+    QByteArray bufferData;
+    bufferData.resize(PARTICLE_COUNT * dataSize * (int)sizeof(float));
+    float *rawVertexArray = reinterpret_cast<float *>(bufferData.data());
+
+    const float pi = std::acos(-1);
+    static float t = 0.0f;
+
+    for(int i = 0 ; i < PARTICLE_COUNT; i++)
+    {
+        const int colorIdx = i * dataSize;
+
+        for(int j = 0; j < 3; j++)
+        {
+            qint64 time = QDateTime::currentMSecsSinceEpoch();
+            const float sinT = std::sin(time);
+            t += pi / 16.0f;
+
+            rawVertexArray[colorIdx + j] = 1.0f;
+        }
+
+    }
+
+    m_pShaderStorage->setData(bufferData);
+
+    m_pStorageParameter->setValue(QVariant::fromValue(m_pShaderStorage.data()));
 }
 
 
