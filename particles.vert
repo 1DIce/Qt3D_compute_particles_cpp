@@ -20,7 +20,7 @@ uniform mat4 modelView;
 void main(void)
 {
     vec4 pos = vec4(vertexPosition.xyz, 1.0) + vec4(particlePosition, 0.0);
-    gl_Position = mvp * pos;
+    gl_Position =  mvp * pos;
     v_out.pos = vec4(modelView * pos).xyz;
     v_out.normal = normalize(modelViewNormal * vertexNormal);
     v_out.color = mix(particleColor * 0.2, particleColor, smoothstep(0.5, 0.8, abs(v_out.normal).z));

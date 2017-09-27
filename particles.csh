@@ -1,9 +1,8 @@
-#version 430 core
+#version 430
 
 uniform float particleStep;
 uniform float finalCollisionFactor;
 
-//uniform float sinUniform;
 
 layout (local_size_x = 1024) in;
 
@@ -12,12 +11,6 @@ struct ParticleData
     vec4 position;
     vec4 direction;
     vec4 color;
-};
-
-//Storage shader buffer with colors
-layout (std430, binding = 1) buffer ColorStorage
-{
-    vec4 farben[];
 };
 
 // Particles from previouse frame
@@ -41,10 +34,6 @@ void main(void)
 
     // New velocity = old velocity + acceleration over step duration
     currentParticle.direction = currentParticle.direction + acceleration * particleStep;
-
-    //Change color with sin
-    //currentParticle.color = vec4(0.9 * sinUniform, 0.9 * sinUniform, 0.9 * sinUniform, 1.0);
-    currentParticle.color = farben[globalId];
 
 
     // Save updated particle
