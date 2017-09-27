@@ -1,7 +1,6 @@
 //=============================================================================================================
 /**
 * @file     computeframegraph.h
-* @author   Lars Debor <lars.debor@tu-ilmenau.de>;
 *
 * @brief     ComputeFramegraph class declaration.
 *
@@ -22,17 +21,8 @@
 // QT INCLUDES
 //=============================================================================================================
 
-#include <QSharedPointer>
-#include <Qt3DCore/QNode>
+#include <QPointer>
 #include <Qt3DRender/QViewport>
-#include <Qt3DRender>
-
-
-//*************************************************************************************************************
-//=============================================================================================================
-// Eigen INCLUDES
-//=============================================================================================================
-
 
 //*************************************************************************************************************
 //=============================================================================================================
@@ -40,7 +30,6 @@
 //=============================================================================================================
 
 namespace Qt3DRender {
-    class QViewport;
     class QRenderSurfaceSelector;
     class QClearBuffers;
     class QNoDraw;
@@ -52,7 +41,9 @@ namespace Qt3DRender {
     class QMemoryBarrier;
 }
 
-
+namespace Qt3DCore {
+    class QNode;
+}
 
 //*************************************************************************************************************
 //=============================================================================================================
@@ -70,38 +61,44 @@ namespace COMPUTESHADER {
 
 //=============================================================================================================
 /**
-* create a new Framegraph with viewPort as root.
-*
-* @brief Brief description of this class.
+* Framegraph for compzte shaders.
 */
 
 class ComputeFramegraph : public Qt3DRender::QViewport
 {
 
 public:
-    typedef QSharedPointer<ComputeFramegraph> SPtr;            /**< Shared pointer type for ComputeFramegraph. */
-    typedef QSharedPointer<const ComputeFramegraph> ConstSPtr; /**< Const shared pointer type for ComputeFramegraph. */
 
-    //=========================================================================================================
+    //=============================================================================================================
     /**
-    * Constructs a ComputeFramegraph object.
+    * Constructor of ComputeFramegraph class.
     */
     explicit ComputeFramegraph(Qt3DCore::QNode *parent = 0);
     
-//    void setDrawKey(Qt3DRender::QFilterKey *pFilterKey);
-    
-//    void setComputeKey(Qt3DRender::QFilterKey *pFilterKey);
-    
+    //=============================================================================================================
+    /**
+    * Set the size of the compute work groups.
+    */
     void setWorkGroups(const int x, const int y, const int z);
     
+    //=============================================================================================================
+    /**
+    *  Set the correct camera for the framegraph.
+    */
     void setCamera(Qt3DRender::QCamera *pCamera);
     
 
 protected:
 
 private:
+
+    //=========================================================================================================
+    /**
+     * Init the ComputeMaterial class
+     */
     void init();
     
+
     QPointer<Qt3DRender::QRenderSurfaceSelector> m_pSurfaceSelector;
 
     QPointer<Qt3DRender::QClearBuffers> m_pClearBuffers;
