@@ -92,7 +92,7 @@ void ComputeMaterial::init()
 {
     //Compute part
     //Set shader
-    m_pComputeShader->setComputeShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/particles.csh"))));
+    m_pComputeShader->setComputeShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/particles.csh"))));
 
     m_pComputeRenderPass->setShaderProgram(m_pComputeShader);
 
@@ -112,8 +112,8 @@ void ComputeMaterial::init()
 
     //Draw part
     //Set shader
-    m_pDrawShader->setVertexShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/particles.vert"))));
-    m_pDrawShader->setFragmentShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/particles.frag"))));
+    m_pDrawShader->setVertexShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/particles.vert"))));
+    m_pDrawShader->setFragmentShaderCode(QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/particles.frag"))));
 
     m_pDrawRenderPass->setShaderProgram(m_pDrawShader);
 
