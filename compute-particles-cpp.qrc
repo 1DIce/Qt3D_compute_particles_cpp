@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>particles.frag</file>
-        <file>particles.vert</file>
-        <file>particles.csh</file>
+        <file>shader/particles.csh</file>
+        <file>shader/particles.frag</file>
+        <file>shader/particles.vert</file>
     </qresource>
 </RCC>
